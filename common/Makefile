@@ -43,8 +43,12 @@ $(BIN) : $(ELF)
 	@arm-none-eabi-objcopy -O binary "$(ELF)" "$(BIN)"
 
 program: $(BIN)
-	@echo 'Programming device with $(BIN)'
+	@echo 'Programming device with $(BIN) (STlink)'
 	@st-flash --reset write $(BIN) 0x8000000
+
+program-btl: $(BIN)
+	@echo 'Programming device with $(BIN) (bootloader)'
+	@stm32flash $(BTLPORT) -b 115200 -w $(BIN) -g 0x0
 
 build_dirs:
 	@mkdir -p build

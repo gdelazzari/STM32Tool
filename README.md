@@ -37,7 +37,10 @@ First off, you'll need:
 + With Linux (yes, I know. Check out *What will come next?* at the end)
 + Python 2.x (Python 3 isn't supported but it's coming very soon in the next commits)
 + The GCC compiler for ARM. On Ubuntu/Debian that should be as easy as `sudo apt-get install gcc-arm-none-eabi`. On Arch Linux there's a `arm-none-eabi-gcc` package available in the AUR.
-+ @texane's `stlink` tool, used to flash STM32 chips. Go to the repository and follow the instructions https://github.com/texane/stlink.
++ @texane 's `stlink` tool, used to flash STM32 chips through an STLink programmer. Go to the repository and follow the instructions https://github.com/texane/stlink.
++ The `stm32flash` utility from @tormod on SourceForge, used to flash STM32 chips through the included bootloader. Go to the link, download and follow the instructions to compile and install https://sourceforge.net/projects/stm32flash/
+
+> You'll probably require just one of the last two tools listed above, depending on your board. You can obviously have both installed if you want or if you need them. For the "tutorial" below we'll use a ST Nucleo board with the built-in STLink programmer, so the `stlink` utility is needed
 
 Assuming you have all the required dependencies, let's install the tool. Just clone the repository and run `install.sh`
 
@@ -124,6 +127,8 @@ $ stm32tool flash myProject
 You'll see that the project gets compiled again (just the files changed are recompiled - it's always `make` in the background) and then flashed on you board using @texane's `stlink` utility.
 
 > If you don't have the udev rules configured correctly and you can't program your device, try running the last command with `sudo`
+
+> If you have a board without the STLink programmer built-in and you want to use the included bootloader, you can flash your project using `stm32tool flash-btl myProject`. Ensure that the correct serial port is set in `config.mk` inside the project directory. Remember to set the BOOT pins correctly and reset your device to make it start into bootloader mode before running the command
 
 You should get your LED blinking.
 I think this is more than enough to show you the workflow of this tool.

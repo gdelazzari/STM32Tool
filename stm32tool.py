@@ -547,6 +547,9 @@ def cleanProject(projectDir):
 def flashProject(projectDir):
     subprocess.Popen(['make', 'program'], cwd=projectDir).wait()
 
+def flashProject_bootloader(projectDir):
+    subprocess.Popen(['make', 'program-btl'], cwd=projectDir).wait()
+
 
 '''
     SUBPROGRAM: HAL package acquisition script
@@ -748,6 +751,7 @@ def createProject(args):
         f.write("CSTD = -std=c99\n")
         f.write("MCU = -D" + mcuDefine + "\n")
         f.write("STARTUP = system/startup_" + modelFile + ".s\n")
+        f.write("BTLPORT = /dev/ttyUSB0\n")
 
     print "[MCU info file]"
     mcu.exportJSON(PROJECT_DIR + "/mcu.json")
@@ -771,7 +775,7 @@ def createProject(args):
 '''
 parser = argparse.ArgumentParser(description='Simple CLI tool to deal with the creation, compilation, management and distribution of STM32 projects and software under Linux')
 
-parser.add_argument('command', choices=['new', 'info', 'build', 'rebuild', 'flash', 'acquire', 'download'], help='The operation to perform')
+parser.add_argument('command', choices=['new', 'info', 'build', 'rebuild', 'flash', 'flash-btl', 'acquire', 'download'], help='The operation to perform')
 parser.add_argument('project', help='The name of the project (folder) to operate within')
 parser.add_argument('-m', '--mcu', help='The MCU model name when creating a project')
 parser.add_argument('-r', '--ram', help='The MCU RAM amount in [kB] when creating a project', type=int)
@@ -835,6 +839,10 @@ if 'build' in args.command or args.command == 'flash':
 # 'flash' command
 if args.command == 'flash':
     flashProject(args.project)
+
+# 'flash-btl' command
+if args.command == 'flash-btl':
+    flashProject_bootloader(args.project)
 
 # 'acquire' command
 if args.command == 'acquire':
